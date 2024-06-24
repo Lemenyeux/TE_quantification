@@ -145,6 +145,8 @@ stellarscope cellsort \
   results/star_alignment/Aligned.sortedByCoord.out.bam \
   results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv
 
+
+
 #6. Basic Stellarscope analysis
 ## ​stellarscope assign [samfile] [gtffile]​ 
 ## ​samfile​: the alignment containing multimapping reads (e.g. the CB-sorted results/stellarscope/Aligned.sortedByCB.bam​ file)
@@ -160,9 +162,11 @@ head resources/retro.hg38.v1.gtf
 
 ## create a directory for stellarscope individual results
 mkdir -p results/stellarscope/individual
+mkdir -p results/stellarscope/log
 
 ## stellarscope analysis (pooling mode individual)
-stellarscope assign \
+
+nohup stellarscope assign \
   --exp_tag pbmc500_individual \
   --outdir results/stellarscope/individual \
   --nproc 12 \
@@ -173,8 +177,9 @@ stellarscope assign \
   --max_iter 500 \
   --updated_sam \
   results/stellarscope/Aligned.sortedByCB.bam \
-  resources/retro.hg38.v1.gtf
-  
+  resources/retro.hg38.v1.gtf > results/stellarscope/log/stellarscope_assign_individual_240624.log 2>&1 &
+
+### [178050 240624 15:25] 
 ### ​--exp_tag: the basename for all the Stellarscope output files
 ### ​--stranded_mode​: consider feature strand when assigning reads, and here it is set to F as 10x libraries are stranded.
 ### --pooling_mode​ ​individual:​ fitting one model for each cell barcode (i.e resolving ambiguous alignments to TEs within each cell). 
