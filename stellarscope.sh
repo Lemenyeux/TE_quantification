@@ -146,6 +146,7 @@ stellarscope cellsort \
   results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv
 
 
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/3da4f926-800b-4cdc-846f-4b59b4a7ce13)
 
 #6. Basic Stellarscope analysis
 ## ​stellarscope assign [samfile] [gtffile]​ 
