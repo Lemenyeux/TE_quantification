@@ -447,9 +447,12 @@ stellarscope cellsort \
 
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/488494e2-9e66-49e6-9519-c4c0e11529eb)
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/0c9da6b1-d31e-464b-a718-40b9d000a1dc)
+
 ##error
+``` bash
 pip uninstall stellarscope
 pip install -e .
+```
 
 # Basic Stellarscope analysis
 
