@@ -138,12 +138,13 @@ mkdir -p results/stellarscope
 
 ## sort reads alignments by CB
 ## ​stellarscope cellsort [samfile] [whitelist]​ command
-stellarscope cellsort \
+nohup stellarscope cellsort \
   --nproc 15 \
   --tempdir /tmp \
   --outfile results/stellarscope/Aligned.sortedByCB.bam \
   results/star_alignment/Aligned.sortedByCoord.out.bam \
-  results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv
+  results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv > results/stellarscope/log/stellarscope_cellsort_240624.log 2>&1 &
+#[804 OK]
 
 #6. Basic Stellarscope analysis
 ## ​stellarscope assign [samfile] [gtffile]​ 
@@ -177,7 +178,7 @@ nohup stellarscope assign \
   results/stellarscope/Aligned.sortedByCB.bam \
   resources/retro.hg38.v1.gtf > results/stellarscope/log/stellarscope_assign_individual_240624.log 2>&1 &
 
-### [178050 240624 15:25] 
+### [989 240624 17:13 error] 
 ### ​--exp_tag: the basename for all the Stellarscope output files
 ### ​--stranded_mode​: consider feature strand when assigning reads, and here it is set to F as 10x libraries are stranded.
 ### --pooling_mode​ ​individual:​ fitting one model for each cell barcode (i.e resolving ambiguous alignments to TEs within each cell). 
@@ -205,7 +206,7 @@ tree -t results/stellarscope
 ### Stellarscope will load the alignments intersecting TE annotation and remove PCR duplicates in around 45 minutes.
 
 ## load the alignment data into stellarscope
-stellarscope assign \
+nohup stellarscope assign \
   --exp_tag pbmc500_stload \
   --outdir results/stellarscope \
   --skip_em \
@@ -214,8 +215,21 @@ stellarscope assign \
   --updated_sam \
   results/stellarscope/Aligned.sortedByCB.bam \
   resources/retro.hg38.v1.gtf \
-  --logfile results/stellarscope/pbmc500_stload.log
+  --logfile results/stellarscope/pbmc500_stload.log > results/stellarscope/log/stellarscope_assign_stload_240624.log 2>&1 &
 
+##chmod +x /home/liumy/software/stellarscope/stellarscope/stellarscope/stellarscope_assign.py
+##nohup /home/liumy/software/stellarscope/stellarscope/stellarscope/stellarscope_assign.py \
+##  --exp_tag pbmc500_stload \
+##  --outdir results/stellarscope \
+##  --skip_em \
+##  --stranded_mode F \
+##  --whitelist results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv \
+##  --updated_sam \
+##  results/stellarscope/Aligned.sortedByCB.bam \
+##  resources/retro.hg38.v1.gtf \
+##  --logfile results/stellarscope/pbmc500_stload.log > results/stellarscope/log/stellarscope_assign_stload_240624.log 2>&1 &
+
+###[1188]
 ### output
 ### two checkpoints: ​pbmc500_stload-checkpoint.load_alignment.pickle​; ​pbmc500_stload-checkpoint.dedup_umi.pickle
 ###​​ --logfile​: ​results/stellarscope/pbmc500_stload.log; capture all the information that would have been displayed in the terminal during the Stellarscope’s execution
