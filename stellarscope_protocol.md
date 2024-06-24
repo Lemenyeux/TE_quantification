@@ -445,6 +445,8 @@ stellarscope cellsort \
   results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv
 ```
 
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/488494e2-9e66-49e6-9519-c4c0e11529eb)
+
 # Basic Stellarscope analysis
 
 The basic usage of Stellarscope is
