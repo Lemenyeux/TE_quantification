@@ -327,7 +327,7 @@ mkdir -p results/star_alignment
 
 # run STAR alignment
 STAR \
-  --runThreadN 18 \
+  --runThreadN 15 \
   --genomeDir resources/STAR_GRCh38.d1.vd1_gencode.v38 \
   --readFilesIn 500_PBMC_3p_LT_Chromium_X_fastqs/500_PBMC_3p_LT_Chromium_X_S4_L003_R2_001.fastq.gz,500_PBMC_3p_LT_Chromium_X_fastqs/500_PBMC_3p_LT_Chromium_X_S4_L004_R2_001.fastq.gz 500_PBMC_3p_LT_Chromium_X_fastqs/500_PBMC_3p_LT_Chromium_X_S4_L003_R1_001.fastq.gz,500_PBMC_3p_LT_Chromium_X_fastqs/500_PBMC_3p_LT_Chromium_X_S4_L004_R1_001.fastq.gz \
   --readFilesCommand gunzip -c \
@@ -342,6 +342,8 @@ STAR \
   --outFilterMultimapScoreRange 5 \
   --outFileNamePrefix results/star_alignment/
 ```
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/84f14cda-b5ad-4b3f-80a0-8f0334d26086)
 
 - The STAR reference genome index within the downloaded resources was
   built using the human reference genome GRCh38 version and GENCODE 38
@@ -385,6 +387,8 @@ STAR \
 # explore the contents of the star alignment directory
 tree -t results/star_alignment
 ```
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/c70e58fc-409b-432a-9977-ef75925df643)
 
 ``` markdown
 results/star_alignment/
@@ -457,6 +461,8 @@ paper.
 # you can use this command to explore the annotation
 head resources/retro.hg38.v1.gtf 
 ```
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/3da4f926-800b-4cdc-846f-4b59b4a7ce13)
 
 The `stellarscope assign` command will do the following operations:
 filter alignments by the user-provided list of passing barcodes
