@@ -442,10 +442,14 @@ stellarscope cellsort \
   --tempdir /tmp \
   --outfile results/stellarscope/Aligned.sortedByCB.bam \
   results/star_alignment/Aligned.sortedByCoord.out.bam \
-  results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv
+  results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv 
 ```
 
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/488494e2-9e66-49e6-9519-c4c0e11529eb)
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/0c9da6b1-d31e-464b-a718-40b9d000a1dc)
+##error
+pip uninstall stellarscope
+pip install -e .
 
 # Basic Stellarscope analysis
 
@@ -506,6 +510,7 @@ stellarscope assign \
   results/stellarscope/Aligned.sortedByCB.bam \
   resources/retro.hg38.v1.gtf
 ```
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/3ef8fb05-4b03-4a4e-9328-b3bed1eb873e)
 
 - The string provided to `--exp_tag` sets the basename for all the
   Stellarscope output files.
@@ -597,7 +602,7 @@ stellarscope assign \
   --updated_sam \
   results/stellarscope/Aligned.sortedByCB.bam \
   resources/retro.hg38.v1.gtf \
-  --logfile results/stellarscope/pbmc500_stload.log
+  --logfile results/stellarscope/pbmc500_stload.log 
 ```
 
 Upon inspection of the `results/stellarscope` directory, you can see
