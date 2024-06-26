@@ -168,17 +168,18 @@ mkdir -p results/stellarscope/log
 nohup stellarscope assign \
   --exp_tag pbmc500_individual \
   --outdir results/stellarscope/individual \
-  --nproc 12 \
+  --nproc 15 \
   --stranded_mode F \
   --whitelist results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv \
   --pooling_mode individual \
   --reassign_mode best_exclude \
-  --max_iter 500 \
+  --max_iter 500 --debug --seed 240626 \
   --updated_sam \
   results/stellarscope/Aligned.sortedByCB.bam \
-  resources/retro.hg38.v1.gtf > results/stellarscope/log/stellarscope_assign_individual_240624.log 2>&1 &
+  resources/retro.hg38.v1.gtf > results/stellarscope/log/stellarscope_assign_individual_240626.log 2>&1 &
 
 ### [989 240624 17:13 error] 
+### [9808 240624 17:50]
 ### ​--exp_tag: the basename for all the Stellarscope output files
 ### ​--stranded_mode​: consider feature strand when assigning reads, and here it is set to F as 10x libraries are stranded.
 ### --pooling_mode​ ​individual:​ fitting one model for each cell barcode (i.e resolving ambiguous alignments to TEs within each cell). 
