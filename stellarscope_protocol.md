@@ -500,20 +500,23 @@ Using 12 CPU cores, `stellarscope assign` completes within ~1 hour.
 mkdir -p results/stellarscope/individual
 
 # stellarscope analysis (pooling mode individual)
-stellarscope assign \
+nohup stellarscope assign \
   --exp_tag pbmc500_individual \
   --outdir results/stellarscope/individual \
-  --nproc 12 \
+  --nproc 15 \
   --stranded_mode F \
   --whitelist results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv \
   --pooling_mode individual \
   --reassign_mode best_exclude \
-  --max_iter 500 \
+  --max_iter 500 --debug --seed 240626 \
   --updated_sam \
   results/stellarscope/Aligned.sortedByCB.bam \
-  resources/retro.hg38.v1.gtf
+  resources/retro.hg38.v1.gtf > results/stellarscope/log/stellarscope_assign_individual_240626.log 2>&1 &
 ```
+
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/3ef8fb05-4b03-4a4e-9328-b3bed1eb873e)
+set seed for stellarscope assign
+2h30min 
 
 - The string provided to `--exp_tag` sets the basename for all the
   Stellarscope output files.
@@ -558,6 +561,8 @@ results/stellarscope/
     |-- pbmc500_individual-updated.bam
     `-- pbmc500_individual-checkpoint.final.pickle
 ```
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/a7a27142-e6de-45de-9823-c0dfb812862e)
+
 
 You can see the operations that `stellarscope assign` performs mirrored
 in the output files. First, `pbmc500_individual-other.bam`,
@@ -596,17 +601,18 @@ remove PCR duplicates in around 45 minutes.
 
 ``` bash
 # load the alignment data into stellarscope
-stellarscope assign \
+nohup stellarscope assign \
   --exp_tag pbmc500_stload \
   --outdir results/stellarscope \
   --skip_em \
   --stranded_mode F \
   --whitelist results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv \
-  --updated_sam \
+  --updated_sam --seed 240626 \
   results/stellarscope/Aligned.sortedByCB.bam \
   resources/retro.hg38.v1.gtf \
-  --logfile results/stellarscope/pbmc500_stload.log 
+  --logfile results/stellarscope/pbmc500_stload.log > results/stellarscope/log/stellarscope_assign_stload_240626.log 2>&1 &
 ```
+[18600]
 
 Upon inspection of the `results/stellarscope` directory, you can see
 that the two checkpoints
