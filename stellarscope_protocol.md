@@ -563,8 +563,26 @@ results/stellarscope/
     |-- pbmc500_individual-updated.bam
     `-- pbmc500_individual-checkpoint.final.pickle
 ```
-![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/a7a27142-e6de-45de-9823-c0dfb812862e)
+> results files:
 
+>> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/a7a27142-e6de-45de-9823-c0dfb812862e)
+
+> `head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-features.tsv -n 20`
+
+>> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/54b17008-ed91-4bc6-8faa-18475f19f0b3)
+
+> `head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-barcodes.tsv -n 20`
+
+>> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/0c4d5ece-990c-463a-8a07-205b3eda7ae6)
+
+> `head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-TE_counts.mtx -n 20`
+
+>> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/5149c016-776d-423f-b0af-097e464d267f)
+
+> `head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-stats.final.tsv -n 20`
+
+>> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/6e761892-4fa8-414c-ab73-24689862d506)
+ 
 
 You can see the operations that `stellarscope assign` performs mirrored
 in the output files. First, `pbmc500_individual-other.bam`,
@@ -723,6 +741,9 @@ a matrix for each reassignment mode:
 tree -t results/stellarscope
 ```
 
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/6e83f3d1-4da0-4eaa-97f3-d3a1aadfdd08)
+
+
 ``` markdown
 results/stellarscope/
 |-- Aligned.sortedByCB.bam
@@ -749,6 +770,10 @@ results/stellarscope/
     |-- pbmc500_pseudobulk-checkpoint.final.pickle
     `-- pbmc500_pseudobulk.log
 ```
+
+`head /home/liumy/software/stellarscope/results/stellarscope/pseudobulk/pbmc500_pseudobulk-TE_counts.mtx -n 20`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/9c94a4c6-25cb-4533-9881-0e909267da5d)
 
 ### Stellarscope Celltype
 
@@ -785,6 +810,16 @@ stellarscope resume \
             --logfile results/stellarscope/celltype/pbmc500_l1.log
 ```
 
+Running:
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/c27cc36b-9493-4d3d-82e2-4823eb52c737)
+
+`head resources/celltypes_tsv/pbmc500_azimuth_l1.tsv`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/99fa77d7-57c4-46d6-8826-d6391120dab3)
+
+
+
 Inspect the outputs in the `results/stellarscope/celltype` directory:
 
 Since only one reassignment mode was requested (`best_conf` with a
@@ -796,6 +831,7 @@ reassignment mode is not indicated in its name, it is simply called
 # stellarscope pooling mode celltype results
 tree -t results/stellarscope
 ```
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/28e5cec3-6168-4383-bca2-2fe6fcd82970)
 
 ``` markdown
 results/stellarscope/
@@ -819,3 +855,7 @@ results/stellarscope/
     |-- pbmc500_l1-checkpoint.final.pickle
     `-- pbmc500_l1.log
 ```
+`head /home/liumy/software/stellarscope/results/stellarscope/celltype/pbmc500_l1-TE_counts.mtx -n 20`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/d5f97eda-51f5-4ceb-b64d-18ebd1fea4a2)
+
