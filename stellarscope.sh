@@ -246,10 +246,11 @@ nohup stellarscope resume \
             --pooling_mode pseudobulk \
             --use_every_reassign_mode \
             --max_iter 500\
-            --updated_sam \
+            --updated_sam --seed 240626 \
             results/stellarscope/pbmc500_stload-checkpoint.dedup_umi.pickle \
             --logfile results/stellarscope/pseudobulk/pbmc500_pseudobulk.log > results/stellarscope/log/stellarscope_resume_pseudobulk_240626.log 2>&1 &
 
+#[20707 less than 2 mins]
 # stellarscope pooling mode pseudobulk results
 tree -t results/stellarscope
 
@@ -258,7 +259,7 @@ tree -t results/stellarscope
 mkdir -p results/stellarscope/pseudobulk
 
 # use stellarscope resume to continue from the deduplication checkpoint
-stellarscope resume \
+nohup stellarscope resume \
             --exp_tag pbmc500_l1 \
             --outdir results/stellarscope/celltype \
             --nproc 15 \
@@ -267,9 +268,10 @@ stellarscope resume \
             --reassign_mode best_conf \
             --conf_prob 0.95 \
             --max_iter 500\
-            --updated_sam \
+            --updated_sam --seed 240626 \
             results/stellarscope/pbmc500_stload-checkpoint.dedup_umi.pickle \
-            --logfile results/stellarscope/celltype/pbmc500_l1.log
+            --logfile results/stellarscope/celltype/pbmc500_l1.log > results/stellarscope/log/stellarscope_resume_celltype_240626.log 2>&1 &
 
+#[21021]
 # stellarscope pooling mode celltype results
 tree -t results/stellarscope/celltype
