@@ -438,7 +438,7 @@ mkdir -p results/stellarscope
 
 # sort reads alignments by CB
 stellarscope cellsort \
-  --nproc 12 \
+  --nproc 15 \
   --tempdir /tmp \
   --outfile results/stellarscope/Aligned.sortedByCB.bam \
   results/star_alignment/Aligned.sortedByCoord.out.bam \
@@ -515,7 +515,9 @@ nohup stellarscope assign \
 ```
 
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/3ef8fb05-4b03-4a4e-9328-b3bed1eb873e)
+
 set seed for stellarscope assign
+
 2h30min 
 
 - The string provided to `--exp_tag` sets the basename for all the
@@ -629,6 +631,8 @@ errors (if any) generated as it ran.
 # the stellarscope files are output with the prefix `pbmc500_stload`
 tree -t results/stellarscope
 ```
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/d1779b53-6a1b-4a31-bce2-5496011020db)
 
 ``` markdown
 results/stellarscope/
