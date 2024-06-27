@@ -179,7 +179,8 @@ nohup stellarscope assign \
   resources/retro.hg38.v1.gtf > results/stellarscope/log/stellarscope_assign_individual_240626.log 2>&1 &
 
 ### [989 240624 17:13 error] 
-### [9808 240624 17:50]
+### [9808 240624 17:50 2h30min]
+
 ### ​--exp_tag: the basename for all the Stellarscope output files
 ### ​--stranded_mode​: consider feature strand when assigning reads, and here it is set to F as 10x libraries are stranded.
 ### --pooling_mode​ ​individual:​ fitting one model for each cell barcode (i.e resolving ambiguous alignments to TEs within each cell). 
@@ -213,24 +214,13 @@ nohup stellarscope assign \
   --skip_em \
   --stranded_mode F \
   --whitelist results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv \
-  --updated_sam \
+  --updated_sam --seed 240626 \
   results/stellarscope/Aligned.sortedByCB.bam \
   resources/retro.hg38.v1.gtf \
-  --logfile results/stellarscope/pbmc500_stload.log > results/stellarscope/log/stellarscope_assign_stload_240624.log 2>&1 &
+  --logfile results/stellarscope/pbmc500_stload.log > results/stellarscope/log/stellarscope_assign_stload_240626.log 2>&1 &
+[18600]
 
 ##chmod +x /home/liumy/software/stellarscope/stellarscope/stellarscope/stellarscope_assign.py
-##nohup /home/liumy/software/stellarscope/stellarscope/stellarscope/stellarscope_assign.py \
-##  --exp_tag pbmc500_stload \
-##  --outdir results/stellarscope \
-##  --skip_em \
-##  --stranded_mode F \
-##  --whitelist results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv \
-##  --updated_sam \
-##  results/stellarscope/Aligned.sortedByCB.bam \
-##  resources/retro.hg38.v1.gtf \
-##  --logfile results/stellarscope/pbmc500_stload.log > results/stellarscope/log/stellarscope_assign_stload_240624.log 2>&1 &
-
-###[1188]
 ### output
 ### two checkpoints: ​pbmc500_stload-checkpoint.load_alignment.pickle​; ​pbmc500_stload-checkpoint.dedup_umi.pickle
 ###​​ --logfile​: ​results/stellarscope/pbmc500_stload.log; capture all the information that would have been displayed in the terminal during the Stellarscope’s execution
@@ -249,16 +239,37 @@ tree -t results/stellarscope
 mkdir -p results/stellarscope/pseudobulk
 
 # use stellarscope resume to continue from the deduplication checkpoint
-stellarscope resume \
+nohup stellarscope resume \
             --exp_tag pbmc500_pseudobulk \
             --outdir results/stellarscope/pseudobulk \
-            --nproc 12 \
+            --nproc 15 \
             --pooling_mode pseudobulk \
             --use_every_reassign_mode \
             --max_iter 500\
             --updated_sam \
             results/stellarscope/pbmc500_stload-checkpoint.dedup_umi.pickle \
-            --logfile results/stellarscope/pseudobulk/pbmc500_pseudobulk.log
+            --logfile results/stellarscope/pseudobulk/pbmc500_pseudobulk.log > results/stellarscope/log/stellarscope_resume_pseudobulk_240626.log 2>&1 &
 
+# stellarscope pooling mode pseudobulk results
+tree -t results/stellarscope
 
+##7.2.2 Stellarscope Pseudobulk
+# create a directory for stellarscope celltype results
+mkdir -p results/stellarscope/pseudobulk
 
+# use stellarscope resume to continue from the deduplication checkpoint
+stellarscope resume \
+            --exp_tag pbmc500_l1 \
+            --outdir results/stellarscope/celltype \
+            --nproc 15 \
+            --pooling_mode celltype \
+            --celltype_tsv resources/celltypes_tsv/pbmc500_azimuth_l1.tsv \
+            --reassign_mode best_conf \
+            --conf_prob 0.95 \
+            --max_iter 500\
+            --updated_sam \
+            results/stellarscope/pbmc500_stload-checkpoint.dedup_umi.pickle \
+            --logfile results/stellarscope/celltype/pbmc500_l1.log
+
+# stellarscope pooling mode celltype results
+tree -t results/stellarscope/celltype
