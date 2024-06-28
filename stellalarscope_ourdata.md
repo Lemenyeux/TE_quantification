@@ -55,7 +55,7 @@ nohup STAR \
   --outFilterMultimapScoreRange 5 \
   --outFileNamePrefix results/star_alignment/ > ${log_file}/STAR_240628.log 2>&1 &
 
-##### [31019 16:37]
+# [31019 16:37-17:25]
 
 # check the output
 tree -t results/star_alignment
@@ -73,6 +73,8 @@ nohup stellarscope cellsort \
   --outfile results/stellarscope/Aligned.sortedByCB.bam \
   results/star_alignment/Aligned.sortedByCoord.out.bam \
   results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv > ${log_file}/stellarscope_cellsort_240628.log 2>&1 &
+
+# [31227 17:27]
 ```
 
 # 4. Basic Stellarscope analysis
