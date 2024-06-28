@@ -1,13 +1,21 @@
-# fastq to bam file using cell ranger
+# Fastq to bam file using Cell Ranger
 ``` bash
-nohup cellranger count --id=d19_4295 --fastqs=/home/liumy/TEQTL/scRNA/raw_data/testing_sample --sample=D19-4295 --output-dir=/home/liumy/TEQTL/scRNA/results/d19_4295 --transcriptome=/home/liumy/software/cellranger/refdata-gex-GRCh38-2024-A --create-bam=true > /home/liumy/TEQTL/scRNA/results/d19_4295/fastqtobam_d19_4295.log 2>&1 &
+nohup cellranger count --id=d19_4295 \
+   --fastqs=/home/liumy/TEQTL/scRNA/raw_data/testing_sample \
+   --sample=D19-4295 \
+   --output-dir=/home/liumy/TEQTL/scRNA/results/d19_4295 \
+   --transcriptome=/home/liumy/software/cellranger/refdata-gex-GRCh38-2024-A \
+   --create-bam=true > /home/liumy/TEQTL/scRNA/results/d19_4295/fastqtobam_d19_4295.log 2>&1 &
+
 # 536650 [240609 17:00-19:22]
 ```
 
-# exclude lines with blank CB
+# Exclude lines with blank CB
 ``` bash
 samtools view possorted_genome_bam.bam -h | awk '/^@/ || /CB:/' | samtools view -h -b > possorted_genome_bam.clean.bam
 ```
+
+# Setup
 
 ``` bash
 # creat conda env
@@ -28,16 +36,16 @@ python setup.py install
 # http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/rmsk.txt.gz
 # description of rmsk.txt.gz file: http://genome.ucsc.edu/cgi-bin/hgTables
 
-
 scTE_build -g hg38 # Human
 scTE_build -g hg38 -m inclusive
-
 
 vim ~/.bashrc
 export PATH=/home/liumy/software/scTE/bin:$PATH
 source ~/.bashrc
+```
 
 # Analysis of 10x style scRNA-seq data
+``` bash
 cd /home/liumy/TEQTL/scRNA/results/d19_4295_te
 nohup scTE -i possorted_genome_bam.clean.bam -o d19_4295 -x /home/liumy/software/scTE/hg38.inclusive.idx -p 10 -CB CB -UMI UB > /home/liumy/TEQTL/scRNA/log/scTE_d19_4295.log 2>&1 &
 
