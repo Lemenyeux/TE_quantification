@@ -211,6 +211,63 @@ resources
 4 directories, 21 files
 ```
 
+#### check the resource files
+**`head resources/STAR_GRCh38.d1.vd1_gencode.v38/geneInfo.tab`**
+``` markdown
+60649
+ENSG00000223972.5	DDX11L1	transcribed_unprocessed_pseudogene
+ENSG00000227232.5	WASH7P	unprocessed_pseudogene
+ENSG00000278267.1	MIR6859-1	miRNA
+ENSG00000243485.5	MIR1302-2HG	lncRNA
+ENSG00000284332.1	MIR1302-2	miRNA
+ENSG00000237613.2	FAM138A	lncRNA
+ENSG00000268020.3	OR4G4P	unprocessed_pseudogene
+ENSG00000240361.2	OR4G11P	transcribed_unprocessed_pseudogene
+ENSG00000186092.7	OR4F5	protein_coding
+```
+
+**`head resources/STAR_GRCh38.d1.vd1_gencode.v38/sjdbList.out.tab`**
+``` markdown
+chr1	12058	12178	+
+chr1	12228	12612	+
+chr1	12698	12974	+
+chr1	12722	13220	+
+chr1	13053	13220	+
+chr1	13375	13452	+
+chr1	14502	15004	-
+chr1	15039	15795	-
+chr1	15948	16606	-
+chr1	16766	16857	-
+```
+
+**`head resources/STAR_GRCh38.d1.vd1_gencode.v38/sjdbList.fromGTF.out.tab`**
+``` markdown
+chr1	12058	12178	+	1
+chr1	12228	12612	+	1
+chr1	12698	12974	+	1
+chr1	12722	13220	+	1
+chr1	13053	13220	+	1
+chr1	13375	13452	+	1
+chr1	14502	15004	-	2
+chr1	15039	15795	-	2
+chr1	15948	16606	-	2
+chr1	16766	16857	-	2
+```
+
+**`head resources/STAR_GRCh38.d1.vd1_gencode.v38/sjdbInfo.txt`**
+``` markdown
+390941	100
+12057	12177	0	0	0	1
+12227	12611	1	0	2	1
+12697	12973	1	0	0	1
+12721	13219	1	2	1	1
+13052	13219	3	2	3	1
+13374	13451	1	0	0	1
+14500	15002	0	1	0	2
+15038	15794	2	0	2	2
+15947	16605	2	0	3	2
+```
+
 ## 2.3 Create a Stellarscope conda environment
 
 Conda environments provide a way to encapsulate dependencies for different analysis projects. Each self-contained environment can have its own set of packages and dependencies, ensuring both reproducibility and that they do not interfere with each other. To go through this protocol, you will need [Python ≥3.5](https://www.python.org/), some additional libraries, the [STAR](https://github.com/alexdobin/STAR) RNA-seq aligner, and [Stellarscope](https://github.com/nixonlab/stellarscope). All of these will be installed into a conda environment called `stellarscope_protocol_env`.
@@ -309,7 +366,7 @@ STAR \
 >>- The STAR reference genome index within the downloaded resources was built using the human reference genome GRCh38 version and GENCODE 38 annotation (`--genomeDir`).
 >>- Notice that STAR requires that the first FASTQ file(s) contain the cDNA read and the second FASTQ file(s) contain the cell barcode+UMI read, and that they’re separated by a blank space (`--readFilesIn`).
 >>- In 10x Genomics single-cell sequencing, a cell barcode serves as a molecular “tag” that allows us to distinguish from which cell came the transcript that originated each sequencing read in the heterogeneous mixture that was sequenced. A [whitelist](https://kb.10xgenomics.com/hc/en-us/articles/115004506263-What-is-a-barcode-whitelist) provides the list of known cell barcodes. The whitelist files are usually found as part of the [cellranger](https://github.com/10XGenomics/cellranger) software. For convenience, we have provided the correct whitelist in the downloaded resources (`--soloCBwhitelist`), if you use data from a different 10x   protocol you will need to provide the appropriate whitelist.
->>> ##### whitelist
+>>> ##### whitelist with 6794880 cell barcodes
 >>> download form https://kb.10xgenomics.com/hc/en-us/articles/360031133451-Why-is-there-a-discrepancy-in-the-3M-february-2018-txt-barcode-whitelist
 >>> 
 >>> `head resources/whitelist_10x/3M-february-2018.txt`
@@ -353,6 +410,128 @@ results/star_alignment
 
 4 directories, 15 files
 ```
+
+### check the output
+**`head results/star_alignment/SJ.out.tab`**
+
+``` markdown
+chr1	10131	10422	2	2	0	0	1	35
+chr1	14441	17223	2	2	0	0	1	25
+chr1	14830	14969	2	2	0	0	12	41
+chr1	14830	185490	2	2	0	0	31	41
+chr1	15039	15795	2	2	1	0	2	8
+chr1	15948	16606	2	2	1	0	1	24
+chr1	16766	16853	2	2	0	0	1	40
+chr1	16766	16857	2	2	1	0	8	31
+chr1	17056	17232	2	2	1	0	16	44
+chr1	17056	187754	2	2	0	0	16	44
+```
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/682a994a-c54e-434f-b1ac-c162bd9caf63)
+
+**`cat results/star_alignment/Solo.out/Barcodes.stats`**
+
+``` markdown
+         noNoAdapter              0
+             noNoUMI              0
+              noNoCB              0
+             noNinCB              0
+            noNinUMI              0
+    noUMIhomopolymer          27667
+         noNoWLmatch        2002734
+         noTooManyMM              0
+  noTooManyWLmatches              0
+     yesWLmatchExact       70976190
+ yesOneWLmatchWithMM         547334
+yesMultWLmatchWithMM        2116754
+```
+
+**`cat results/star_alignment/Solo.out/Gene/Features.stats`**
+
+``` markdown
+                 noUnmapped        5102468
+                noNoFeature       29214965
+               MultiFeature       10006110
+subMultiFeatureMultiGenomic        9238505
+         noTooManyWLmatches         156976
+       noMMtoWLwithoutExact              0
+                 yesWLmatch       29159759
+         yessubWLmatchExact       28466637
+yessubWLmatch_UniqueFeature       29159759
+            yesCellBarcodes          22909
+                    yesUMIs        6957895
+```
+
+#### row file: features.tsv, barcodes.tsv, matrix.mtx - 60649 features with 6794880 cell barcodes
+**`head results/star_alignment/Solo.out/Gene/raw/features.tsv`**
+
+``` markdown
+ENSG00000223972.5	DDX11L1	Gene Expression
+ENSG00000227232.5	WASH7P	Gene Expression
+ENSG00000278267.1	MIR6859-1	Gene Expression
+ENSG00000243485.5	MIR1302-2HG	Gene Expression
+ENSG00000284332.1	MIR1302-2	Gene Expression
+ENSG00000237613.2	FAM138A	Gene Expression
+ENSG00000268020.3	OR4G4P	Gene Expression
+ENSG00000240361.2	OR4G11P	Gene Expression
+ENSG00000186092.7	OR4F5	Gene Expression
+ENSG00000238009.6	RP11-34P13.7	Gene Expression
+```
+
+**`head results/star_alignment/Solo.out/Gene/raw/barcodes.tsv`**
+
+``` markdown
+AAACCCAAGAAACACT
+AAACCCAAGAAACCAT
+AAACCCAAGAAACCCA
+AAACCCAAGAAACCCG
+AAACCCAAGAAACCTG
+AAACCCAAGAAACGAA
+AAACCCAAGAAACGTC
+AAACCCAAGAAACTAC
+AAACCCAAGAAACTCA
+AAACCCAAGAAACTGC
+```
+
+**`head results/star_alignment/Solo.out/Gene/raw/matrix.mtx`**
+
+``` markdown
+%%MatrixMarket matrix coordinate integer general
+%
+60649 6794880 2502872
+60631 4704 1
+60635 10432 1
+16804 16886 1
+51809 16933 1
+25141 17937 1
+10546 19742 1
+52780 20161 1
+```
+
+#### filtered file: features.tsv, barcodes.tsv, matrix.mtx - 60649 features with 564 cell barcodes
+**`head results/star_alignment/Solo.out/Gene/filtered/matrix.mtx`**
+
+``` markdown
+%%MatrixMarket matrix coordinate integer general
+%
+60649 564 1617942
+63 1 1
+69 1 3
+106 1 1
+123 1 2
+131 1 1
+133 1 1
+152 1 2
+```
+
+#### log files: Log.final.out, Log.out, Log.progress.out
+**`cat results/star_alignment/Log.final.out`**
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/da92224f-8e5d-4972-9444-3fd4446069a4)
+
+**`head results/star_alignment/Log.out`**
+**`head results/star_alignment/Log.progress.out`**
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/6e94efe5-2bb0-433d-9912-7f21ac7b82d5)
 
 ## 3.2 Stellarscope Cellsort
 
@@ -442,6 +621,8 @@ These are all the outputs in the `results/stellarscope/individual`
 tree -t results/stellarscope
 ```
 
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/a7a27142-e6de-45de-9823-c0dfb812862e)
+
 ``` markdown
 results/stellarscope/individual
 ├── pbmc500_individual-other.bam
@@ -458,31 +639,62 @@ results/stellarscope/individual
 
 0 directories, 11 files
 ```
+
+### check the output
 > #### file check： results files-individual
 > - **pbmc500_individual-other.bam​, ​pbmc500_individual-tmp_tele.bam**​: contain the alignments that do and do not overlap the TE annotation, respectively、
 > - ​**pbmc500_individual-checkpoint.load_alignment.pickle​**: Stellarscope’s loading of alignments that intersect with the TE annotation
 > - ​**pbmc500_individual-umi_tracking.txt, ​pbmc500_individual-checkpoint.dedup_umi.pickle​**​: a record and checkpoint of the PCR duplicates removal process
 > - the ​**sparse matrix files​** ( ​*-barcodes.tsv​ ,  ​*-features.tsv​ , and  ​*-TE_counts.mtx​ )
 > - the ​**stats report file​** ( ​*-stats.final.tsv​ ), the ​**updated BAM​** ( ​*-updated.bam​ ) and ​**final checkpoint​** ( ​*-checkpoint.final.pickle​ )
->   
->> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/a7a27142-e6de-45de-9823-c0dfb812862e)
 
-> `head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-features.tsv -n 20`
+#### pickle file: pbmc500_individual-checkpoint.load_alignment.pickle, pbmc500_individual-checkpoint.dedup_umi.pickle, pbmc500_individual-checkpoint.final.pickle
 
->> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/54b17008-ed91-4bc6-8faa-18475f19f0b3)
+``` markdown
+>>> import pickle
+>>> with open("/home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-checkpoint.load_alignment.pickle", "rb") as file:
+...     data1 = pickle.load(file)
+...     print(data1)
+... 
+<Stellarscope samfile=results/stellarscope/Aligned.sortedByCB.bam, gtffile=resources/retro.hg38.v1.gtf>
+>>> with open("/home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-checkpoint.dedup_umi.pickle", "rb") as file:
+...     data2 = pickle.load(file)
+...     print(data2)
+... 
+<Stellarscope samfile=results/stellarscope/Aligned.sortedByCB.bam, gtffile=resources/retro.hg38.v1.gtf>
+>>> with open("/home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-checkpoint.final.pickle", "rb") as file:
+...     data3 = pickle.load(file)
+...     print(data3)
+... 
+<Stellarscope samfile=results/stellarscope/Aligned.sortedByCB.bam, gtffile=resources/retro.hg38.v1.gtf>
+```
 
-> `head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-barcodes.tsv -n 20`
+#### Results of TE annotation for 564 pbmc cells with 27813 features: pbmc500_individual-barcodes.tsv, pbmc500_individual-features.tsv, pbmc500_individual-TE_counts.mtx - the same as results in celltype analysis 
 
->> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/0c4d5ece-990c-463a-8a07-205b3eda7ae6)
+`head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-barcodes.tsv -n 20`
 
-> `head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-TE_counts.mtx -n 20`
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/0c4d5ece-990c-463a-8a07-205b3eda7ae6)
 
->> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/5149c016-776d-423f-b0af-097e464d267f)
+`head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-features.tsv -n 20`
 
-> `head /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-stats.final.tsv -n 20`
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/54b17008-ed91-4bc6-8faa-18475f19f0b3)
 
->> ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/6e761892-4fa8-414c-ab73-24689862d506)
- 
+`head -n 20 /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-TE_counts.mtx`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/7c955335-6f5e-4919-857e-7a517314f57e)
+
+#### other files: pbmc500_individual-umi_tracking.txt, pbmc500_individual-stats.final.tsv
+
+`head -n 20 /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-umi_tracking.txt`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/b93cde23-79a5-40f9-8c6e-03a02f134bb0)
+
+  `less /home/liumy/software/stellarscope/results/stellarscope/individual/pbmc500_individual-stats.final.tsv`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/6e761892-4fa8-414c-ab73-24689862d506)
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/4227ffa9-1d32-423d-af62-145e08b91cdf)
+
 
 # 5 Advanced Stellarscope analysis: multiple pooling modes
 
@@ -492,7 +704,7 @@ You can achieve this by combining the commands `stellarscope assign` with the fl
 
 ## 5.1 Stellarscope load
 
-In this case (`--skip_em`), there is no pooling mode argument, no reassign mode argument, and no iterations argument. 
+**In this case (`--skip_em`), there is no pooling mode argument, no reassign mode argument, and no iterations argument.**
 
 Stellarscope will load the alignments intersecting TE annotation and remove PCR duplicates in around 1.5 hours.
 
@@ -510,15 +722,9 @@ nohup stellarscope assign \
   --logfile results/stellarscope/pbmc500_stload.log > results/stellarscope/log/stellarscope_assign_stload_240626.log 2>&1 &
 ```
 
-Upon inspection of the `results/stellarscope` directory, you can see that the two checkpoints
-`pbmc500_stload-checkpoint.load_alignment.pickle` and
-`pbmc500_stload-checkpoint.dedup_umi.pickle` have been created.
+Upon inspection of the `results/stellarscope` directory, you can see that the two checkpoints `pbmc500_stload-checkpoint.load_alignment.pickle` and `pbmc500_stload-checkpoint.dedup_umi.pickle` have been created.
 
-In this case, the argument `--logfile` was provided, and thus, the file
-`results/stellarscope/pbmc500_stload.log` is created. This file captures
-all the information that would have been displayed in the terminal
-during the Stellarscope’s execution. It includes messages, warnings, and
-errors (if any) generated as it ran.
+In this case, the argument `--logfile` was provided, and thus, the file `results/stellarscope/pbmc500_stload.log` is created. This file captures all the information that would have been displayed in the terminal during the Stellarscope’s execution. It includes messages, warnings, and errors (if any) generated as it ran.
 
 ### Output
 
@@ -537,6 +743,44 @@ tree -t results/stellarscope
 ├── pbmc500_stload.log
 ├── pbmc500_stload-stats.final.tsv
 ```
+
+### check the output
+#### bam file: pbmc500_stload-other.bam, pbmc500_stload-tmp_tele.bam, contain the alignments that do and do not overlap the TE annotation, respectively
+`samtools view pbmc500_stload-other.bam | head`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/0d701c21-1e98-4964-a89c-ee915dbf1530)
+
+#### pickle file: pbmc500_stload-checkpoint.load_alignment.pickle, pbmc500_stload-checkpoint.dedup_umi.pickle
+
+``` markdown
+>>> import pickle
+>>> with open("/home/liumy/software/stellarscope/results/stellarscope/pbmc500_stload-checkpoint.load_alignment.pickle", "rb") as file:
+...     data = pickle.load(file)
+...     print(data)
+... 
+<Stellarscope samfile=results/stellarscope/Aligned.sortedByCB.bam, gtffile=resources/retro.hg38.v1.gtf>
+
+>>> with open("/home/liumy/software/stellarscope/results/stellarscope/pbmc500_stload-checkpoint.dedup_umi.pickle", "rb") as file:
+...     data = pickle.load(file)
+...     print(data)
+... 
+<Stellarscope samfile=results/stellarscope/Aligned.sortedByCB.bam, gtffile=resources/retro.hg38.v1.gtf>
+```
+
+#### other files: pbmc500_stload-umi_tracking.txt, pbmc500_stload.log, pbmc500_stload-stats.final.tsv
+
+`head -n 20 /home/liumy/software/stellarscope/results/stellarscope/pbmc500_stload-umi_tracking.txt`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/cb8b5f43-4843-4400-b10e-ac2688d0df1d)
+
+`less /home/liumy/software/stellarscope/results/stellarscope/pbmc500_stload.log`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/66438766-7473-48ff-b165-36b4f2e95d33)
+
+`less /home/liumy/software/stellarscope/results/stellarscope/pbmc500_stload-stats.final.tsv`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/663c4010-3381-4c82-95a8-fa9c0edd9f03)
+
 
 ## 5.2 Stellarscope resume
 
@@ -605,9 +849,35 @@ results/stellarscope/pseudobulk
 ```
 
 ### check the output
+
+#### Results of TE annotation for 564 pbmc cells with 27813 features: pbmc500_pseudobulk-barcodes.tsv, pbmc500_pseudobulk-features.tsv, pbmc500_pseudobulk-TE_counts.mtx - the same as results in celltype analysis 
+
 `head /home/liumy/software/stellarscope/results/stellarscope/pseudobulk/pbmc500_pseudobulk-TE_counts.mtx -n 20`
 
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/9c94a4c6-25cb-4533-9881-0e909267da5d)
+
+##### other files: pbmc500_pseudobulk-stats.final.tsv, pbmc500_pseudobulk.log, pbmc500_pseudobulk-checkpoint.final.pickle, pbmc500_pseudobulk-TE_counts.total_hits.mtx
+
+`less /home/liumy/software/stellarscope/results/stellarscope/pseudobulk/pbmc500_pseudobulk-stats.final.tsv`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/2d5f0deb-b5b8-4b1b-8c66-a51c8e833081)
+
+`less /home/liumy/software/stellarscope/results/stellarscope/pseudobulk/pbmc500_pseudobulk.log`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/e9af1a8e-f13a-4bf9-a115-22a10e814061)
+
+``` markdown
+>>> with open("/home/liumy/software/stellarscope/results/stellarscope/pseudobulk/pbmc500_pseudobulk-checkpoint.final.pickle", "rb") as file:
+...     data = pickle.load(file)
+...     print(data)
+... 
+<Stellarscope checkpoint=results/stellarscope/pbmc500_stload-checkpoint.dedup_umi.pickle>
+```
+
+`head -n 20 /home/liumy/software/stellarscope/results/stellarscope/pseudobulk/pbmc500_pseudobulk-TE_counts.total_hits.mtx`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/5718217f-0b13-4159-a5dc-e5d6ce616a08)
+
 
 ### 5.2.2 Stellarscope Celltype
 
