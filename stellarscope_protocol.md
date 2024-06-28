@@ -376,6 +376,7 @@ STAR \
 >>- If you use data from a different protocol, with a different [barcode strategy/structure](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md#barcode-geometry), you will need to adjust the `--soloCBstart`, `--soloCBlen`, `--soloUMIstart`, `--soloUMIlen` parameters.
 >>- Refer to [STAR’s documentation](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md#matching-cellranger-4xx-and-5xx-results) for information on the adapter clipping, and the strategy to match whitelist barcodes, the UMI filtering and deduplication.
 >>- In this alignment multimapping reads are allowed by setting the argument `--outFilterMultimapNmax` to `500`, and the argument `--outFilterMultimapScoreRange` is set to `5` so that for each multimapping read, its alignments additional to the best one will actually be included in the output BAM file.
+>>- Unmapped reads can be output into the SAM/BAM Aligned.* le(s) with `--outSAMunmapped Within` option.
 
 ### Output
 
@@ -404,8 +405,8 @@ results/star_alignment
 │       ├── Summary.csv
 │       └── UMIperCellSorted.txt
 ├── Aligned.sortedByCoord.out.bam
-├── Log.final.out
-├── Log.out
+├── Log.final.out 
+├── Log.out # main log le with a lot of detailed information about the run. This le is most useful for troubleshooting and debugging.
 └── Log.progress.out
 
 4 directories, 15 files
@@ -413,6 +414,17 @@ results/star_alignment
 
 ### check the output
 **`head results/star_alignment/SJ.out.tab`**
+
+> SJ.out.tab contains high condence collapsed splice junctions in tab-delimited format. Note that STAR denes the junction start/end as intronic bases, while many other software dene them as exonic bases. The columns have the following meaning:
+> - column 1: chromosome
+> - column 2: first base of the intron (1-based)
+> - column 3: last base of the intron (1-based)
+> - column 4: strand (0: undened, 1: +, 2: -)
+> - column 5: intron motif: 0: non-canonical; 1: GT/AG, 2: CT/AC, 3: GC/AG, 4: CT/GC, 5: AT/AC, 6: GT/AT
+> - column 6: 0: unannotated, 1: annotated in the splice junctions database. Note that in 2-pass mode, junctions detected in the 1st pass are reported as annotated, in addition to annotated junctions from GTF.
+> - column 7: number of uniquely mapping reads crossing the junction
+> - column 8: number of multi-mapping reads crossing the junction
+> - column 9: maximum spliced alignment overhang
 
 ``` markdown
 chr1	10131	10422	2	2	0	0	1	35
@@ -445,6 +457,30 @@ chr1	17056	187754	2	2	0	0	16	44
 yesMultWLmatchWithMM        2116754
 ```
 
+**`cat results/star_alignment/Solo.out/Gene/Summary.csv`**
+``` markdown
+Number of Reads,75670679
+Reads With Valid Barcodes,0.971093
+Sequencing Saturation,0.761387
+Q30 Bases in CB+UMI,0.955356
+Q30 Bases in RNA read,0.888375
+Reads Mapped to Genome: Unique+Multiple,0.925104
+Reads Mapped to Genome: Unique,0.675028
+Reads Mapped to Gene: Unique+Multiple Gene,NoMulti
+Reads Mapped to Gene: Unique Gene,0.385351
+Estimated Number of Cells,564
+Unique Reads in Cells Mapped to Gene,25755892
+Fraction of Unique Reads in Cells,0.883268
+Mean Reads per Cell,45666
+Median Reads per Cell,35806
+UMIs in Cells,5855011
+Mean UMI per Cell,10381
+Median UMI per Cell,7934
+Mean Gene per Cell,2868
+Median Gene per Cell,2413
+Total Gene Detected,24212
+```
+
 **`cat results/star_alignment/Solo.out/Gene/Features.stats`**
 
 ``` markdown
@@ -460,6 +496,21 @@ yessubWLmatch_UniqueFeature       29159759
             yesCellBarcodes          22909
                     yesUMIs        6957895
 ```
+
+> - nNinBarcode: number of reads with more than 2 Ns in cell barcode (CB)
+> - nUMIhomopolymer: number of reads with homopolymer in CB
+> - nTooMany: not used at the moment
+> - nNoMatch: number of reads with CBs that do not match whitelist even with one mismatch
+> - All of the above reads are discarded from Solo output. Remaining reads are checked for overlap with features (e.g. genes):
+> - nUnmapped: number of reads unmapped to the genome
+> - nNoFeature: number of reads that map to the genome but do not belong to a feature
+> - nAmbigFeature: number of reads that belong to more than one feature
+> - nAmbigFeatureMultimap: number of reads that belong to more than one feature and are also multimapping to the genome (this is a subset of the nAmbigFeature)
+> - nTooMany: number of reads with ambiguous CB (i.e. CB matches whitelist with one mismatch but with posterior probability <0.95)
+> - nNoExactMatch: number of reads with CB that matches a whitelist barcode with 1 mis-match, but this whitelist barcode does not get any other reads with exact matches of CB
+> - nCellBarcodes: number of distinct CBs detected
+> - nUMIs: number of distinct UMIs detected
+
 
 #### row file: features.tsv, barcodes.tsv, matrix.mtx - 60649 features with 6794880 cell barcodes
 **`head results/star_alignment/Solo.out/Gene/raw/features.tsv`**
@@ -526,10 +577,15 @@ AAACCCAAGAAACTGC
 #### log files: Log.final.out, Log.out, Log.progress.out
 **`cat results/star_alignment/Log.final.out`**
 
+summary mapping statistics after mapping job is complete, very useful for quality control. The statistics are calculated for each read (single- or paired-end) and then summed or averaged over all reads. Note that STAR counts a paired-end read as one read, (unlike the samtools agstat/idxstats, which count each mate separately). Most of the information is collected about the UNIQUE mappers (unlike samtools agstat/idxstats which does not separate unique or multi-mappers). Each splicing is counted in the numbers of splices, which would correspond to summing the counts in SJ.out.tab. The mismatch/indel error rates are calculated on a per base basis, i.e. as total number of mismatches/indels in all unique mappers divided by the total number of mapped bases.
+
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/da92224f-8e5d-4972-9444-3fd4446069a4)
 
 **`head results/star_alignment/Log.out`**
+
 **`head results/star_alignment/Log.progress.out`**
+
+reports job progress statistics, such as the number of processed reads, % of mapped reads etc. It is updated in 1 minute intervals.
 
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/6e94efe5-2bb0-433d-9912-7f21ac7b82d5)
 
