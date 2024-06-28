@@ -143,7 +143,7 @@ nohup stellarscope resume \
 tree -t results/stellarscope
 ```
 
-## 5.3 Stellarscope resume - celltype
+## 5.3 Stellarscope resume - Celltype - no celltype annotation file - no run
 ``` bash
 # create a directory for stellarscope celltype results
 mkdir -p results/stellarscope/celltype
