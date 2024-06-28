@@ -424,6 +424,7 @@ nohup stellarscope assign \
 
 >#### error
 >![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/3ef8fb05-4b03-4a4e-9328-b3bed1eb873e)
+>
 >set a seed for stellarscope assign
 
 >#### arguments check: stellarscope assign
@@ -614,7 +615,7 @@ This is an example of fitting one model per cell type. This strategy depends on 
 
 To exemplify this Stellarscope analysis, we have provided within the resources a file `resources/celltypes_tsv/pbmc500_azimuth_l1.tsv` where each of the PBMC’s cell barcodes has an assigned cell types obtained from azimuth. This is provided to Stellarscope using the argument `--celltype_tsv`.
 
-This Stellarscope analysis took around 7 minutes in total.
+This Stellarscope analysis took around 10 minutes in total.
 
 ``` bash
 # create a directory for stellarscope celltype results
@@ -657,16 +658,49 @@ results/stellarscope/celltype
 
 ### check the output
 
-Running:
+##### Running process
 
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/c27cc36b-9493-4d3d-82e2-4823eb52c737)
+
+##### cell type annotation file from [Azimuth](https://azimuth.hubmapconsortium.org/references/#Human%20-%20PBMC)
 
 `head resources/celltypes_tsv/pbmc500_azimuth_l1.tsv`
 
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/99fa77d7-57c4-46d6-8826-d6391120dab3)
 
+`head resources/celltypes_tsv/pbmc500_azimuth_l2.tsv`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/fc74f0bb-aaaf-4077-8353-bcc94089064f)
+
+##### Results of TE annotation for 564 pbmc cells with 27813 features: pbmc500_l1-barcodes.tsv, pbmc500_l1-features.tsv, pbmc500_l1-TE_counts.mtx
+
+`head /home/liumy/software/stellarscope/results/stellarscope/celltype/pbmc500_l1-barcodes.tsv -n 20`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/10529326-37d8-460d-88ec-9dd8ccd22c5f)
+
+`head /home/liumy/software/stellarscope/results/stellarscope/celltype/pbmc500_l1-features.tsv -n 20`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/89ad2733-766f-4d60-8448-6f7bc05968c9)
 
 `head /home/liumy/software/stellarscope/results/stellarscope/celltype/pbmc500_l1-TE_counts.mtx -n 20`
 
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/d5f97eda-51f5-4ceb-b64d-18ebd1fea4a2)
 
+##### other files: pbmc500_l1-stats.final.tsv, pbmc500_l1-checkpoint.final.pickle, pbmc500_l1.log
+
+`less /home/liumy/software/stellarscope/results/stellarscope/celltype/pbmc500_l1-stats.final.tsv`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/0f4602e2-074a-4fc1-aaa0-d3e7c37b1307)
+
+``` python
+with open('/home/liumy/software/stellarscope/results/stellarscope/celltype/pbmc500_l1-checkpoint.final.pickle', 'rb') as file:
+     data = pickle.load(file)
+     print(data)
+```
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/e2336acf-f063-4a88-8e58-0230bda6c840)
+
+
+`less /home/liumy/software/stellarscope/results/stellarscope/celltype/pbmc500_l1.log`
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/b7135686-2876-4c03-906d-8219d0f11705)
