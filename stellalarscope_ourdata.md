@@ -74,7 +74,7 @@ nohup stellarscope cellsort \
   results/star_alignment/Aligned.sortedByCoord.out.bam \
   results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv > ${log_file}/stellarscope_cellsort_240628.log 2>&1 &
 
-# [31227 17:27]
+# [31227 17:27 - 17:56]
 ```
 
 # 4. Basic Stellarscope analysis
@@ -84,19 +84,19 @@ mkdir -p results/stellarscope/individual
 
 ## stellarscope analysis (pooling mode individual)
 nohup stellarscope assign \
-  --exp_tag pbmc500_individual \
+  --exp_tag D19_4295_individual \
   --outdir results/stellarscope/individual \
   --nproc 15 \
   --stranded_mode F \
   --whitelist results/star_alignment/Solo.out/Gene/filtered/barcodes.tsv \
   --pooling_mode individual \
   --reassign_mode best_exclude \
-  --max_iter 500 --debug --seed 240626 \
+  --max_iter 500 --debug --seed 240628 \
   --updated_sam \
   results/stellarscope/Aligned.sortedByCB.bam \
   ${resource_file}/retro.hg38.v1.gtf > ${log_file}/stellarscope_assign_individual_240628.log 2>&1 &
 
-### [9808 240624 17:50 2h30min]
+# [31475 18:19 2h30min]
 
 ## inspect the analysis results
 tree -t results/stellarscope/individual
