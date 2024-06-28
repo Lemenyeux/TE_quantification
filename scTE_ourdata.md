@@ -1,3 +1,14 @@
+# fastq to bam file using cell ranger
+``` bash
+nohup cellranger count --id=d19_4295 --fastqs=/home/liumy/TEQTL/scRNA/raw_data/testing_sample --sample=D19-4295 --output-dir=/home/liumy/TEQTL/scRNA/results/d19_4295 --transcriptome=/home/liumy/software/cellranger/refdata-gex-GRCh38-2024-A --create-bam=true > /home/liumy/TEQTL/scRNA/results/d19_4295/fastqtobam_d19_4295.log 2>&1 &
+# 536650 [240609 17:00-19:22]
+```
+
+# exclude lines with blank CB
+``` bash
+samtools view possorted_genome_bam.bam -h | awk '/^@/ || /CB:/' | samtools view -h -b > possorted_genome_bam.clean.bam
+```
+
 ``` bash
 # creat conda env
 conda create -n scte
