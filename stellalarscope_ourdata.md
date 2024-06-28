@@ -107,7 +107,7 @@ tree -t results/stellarscope/individual
 ``` bash
 # load the alignment data into stellarscope
 nohup stellarscope assign \
-  --exp_tag pbmc500_stload \
+  --exp_tag D19_4295_stload \
   --outdir results/stellarscope \
   --skip_em \
   --stranded_mode F \
@@ -115,7 +115,7 @@ nohup stellarscope assign \
   --updated_sam --seed 240628 \
   results/stellarscope/Aligned.sortedByCB.bam \
   resources/retro.hg38.v1.gtf \
-  --logfile results/stellarscope/pbmc500_stload.log > ${log_file}/stellarscope_assign_stload_240628.log 2>&1 &
+  --logfile results/stellarscope/D19_4295_stload.log > ${log_file}/stellarscope_assign_stload_240628.log 2>&1 &
 [18600]
 
 # the stellarscope files are output with the prefix `pbmc500_stload`
@@ -129,14 +129,14 @@ mkdir -p results/stellarscope/pseudobulk
 
 # use stellarscope resume to continue from the deduplication checkpoint
 nohup stellarscope resume \
-            --exp_tag pbmc500_pseudobulk \
+            --exp_tag D19_4295_pseudobulk \
             --outdir results/stellarscope/pseudobulk \
             --nproc 15 \
             --pooling_mode pseudobulk \
             --reassign_mode best_conf \
             --max_iter 500\
             --updated_sam --seed 240626 \
-            results/stellarscope/pbmc500_stload-checkpoint.dedup_umi.pickle \
+            results/stellarscope/D19_4295_stload-checkpoint.dedup_umi.pickle \
             --logfile results/stellarscope/pseudobulk/pbmc500_pseudobulk.log > ${log_file}/stellarscope_resume_pseudobulk_240626.log 2>&1 &
 
 #[20707 less than 2 mins]
@@ -152,7 +152,7 @@ mkdir -p results/stellarscope/celltype
 
 # use stellarscope resume to continue from the deduplication checkpoint
 nohup stellarscope resume \
-            --exp_tag pbmc500_l1 \
+            --exp_tag D19_4295_celltype \
             --outdir results/stellarscope/celltype \
             --nproc 15 \
             --pooling_mode celltype \
@@ -161,8 +161,8 @@ nohup stellarscope resume \
             --conf_prob 0.95 \
             --max_iter 500\
             --updated_sam --seed 240626 \
-            results/stellarscope/pbmc500_stload-checkpoint.dedup_umi.pickle \
-            --logfile results/stellarscope/celltype/pbmc500_l1.log > results/stellarscope/log/stellarscope_resume_celltype_240626.log 2>&1 &
+            results/stellarscope/D19_4295_stload-checkpoint.dedup_umi.pickle \
+            --logfile results/stellarscope/celltype/D19_4295_celltype.log > results/stellarscope/log/stellarscope_resume_celltype_240626.log 2>&1 &
 
 #[21021]
 
