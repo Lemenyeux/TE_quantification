@@ -133,7 +133,7 @@ nohup stellarscope resume \
             --outdir results/stellarscope/pseudobulk \
             --nproc 15 \
             --pooling_mode pseudobulk \
-            --use_every_reassign_mode \
+            --reassign_mode best_conf \
             --max_iter 500\
             --updated_sam --seed 240626 \
             results/stellarscope/pbmc500_stload-checkpoint.dedup_umi.pickle \
