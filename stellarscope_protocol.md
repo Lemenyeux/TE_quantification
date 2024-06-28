@@ -1030,3 +1030,53 @@ with open('/home/liumy/software/stellarscope/results/stellarscope/celltype/pbmc5
 `less /home/liumy/software/stellarscope/results/stellarscope/celltype/pbmc500_l1.log`
 
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/b7135686-2876-4c03-906d-8219d0f11705)
+
+# 6 check the feature*cell matrix
+``` R
+library(Matrix); library(Seurat)
+
+# Read the .mtx file along with cell and feature names
+setwd("/home/liumy/software/stellarscope/results/stellarscope")
+mode <- "pseudobulk"
+
+matrix <- readMM(sprintf("%s/pbmc500_%s-TE_counts.mtx", mode, mode)) #27813 x 564 sparse Matrix 
+features <- read.delim(sprintf("%s/pbmc500_%s-features.tsv", mode, mode), header = FALSE)
+barcodes <- read.delim(sprintf("%s/pbmc500_%s-barcodes.tsv", mode, mode), header = FALSE)
+
+# Create a Seurat object
+seurat_object <- CreateSeuratObject(counts = matrix)
+rownames(seurat_object) <- features$V1
+colnames(seurat_object) <- barcodes$V1
+
+# Display the basic structure of the Seurat object
+print(seurat_object)
+
+# Get metadata about the cells
+head(seurat_object@meta.data)
+
+# Get the expression matrix
+expression_matrix <- seurat_object@assays$RNA@layers$counts
+print(dim(expression_matrix))
+
+# Convert to data frame (optional)
+expression_matrix_df <- as.data.frame(as.matrix(expression_matrix))
+rownames(expression_matrix_df) <- features$V1
+colnames(expression_matrix_df) <- barcodes$V1
+```
+
+## 6.1 individual
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/251c3462-7c46-47aa-98fe-d7131231e21f)
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/311d16af-444c-422b-b3b4-ed080cc76622)
+
+## 6.2 pseudobulk
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/5879cd2b-7c12-4c7c-b07d-bacb07e9667f)
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/5a618348-f2ff-4186-a424-65d91d49e88a)
+
+## 6.3 celltypes
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/cfa69aaf-276d-4e53-97ef-9a79bed775af)
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/a2a63604-b5f6-4035-9879-9926d5b1f38d)
+
+
