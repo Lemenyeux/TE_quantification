@@ -1,12 +1,16 @@
 # Introduction
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/3d67b9cc-48d5-4065-a350-f7d76e8a6a43)
-STELLARSCOPE SETUP. (A) Alignments are filtered according to a user-provided list of passing barcodes ("whitelist"). (B) The cell barcode (CB) and unique molecular identifier (UMI) from valid fragments are stored internally. (C) Initial weight matrix with fragments as rows and candidate assigned features as columns. (D) Values for the initial weight matrix setup result from intersecting each fragment's alignment(s) with the TE features annotation and selecting the best alignment score for each fragment for each locus.
+
+**STELLARSCOPE SETUP**. (A) Alignments are filtered according to a user-provided list of passing barcodes ("whitelist"). (B) The cell barcode (CB) and unique molecular identifier (UMI) from valid fragments are stored internally. (C) Initial weight matrix with **fragments as rows and candidate assigned features as columns**. (D) Values for the initial weight matrix setup result from **intersecting** each fragment's alignment(s) with the TE features annotation and selecting the best alignment score for each fragment for each locus.
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/697f2268-d7de-4b3f-94a1-dd33e4994c5c)
-MULTIMAPPER-AWARE UMI DEDUPLICATION. (E) fragments that contain the same CB+UMI combination (i.e. duplicates) and their alignment positions are identified. (F) An undirected weighted graph is built for each CB+UMI combination with fragments as nodes and shared alignments as edge weights. For each component the most informative read according to alignment quality and ambiguity criteria is selected as representative. This method identifies and corrects non obvious duplicates (e.g. f1-f2, and f1-f3).
+
+**MULTIMAPPER-AWARE UMI DEDUPLICATION**. (E) fragments that contain the same CB+UMI combination (i.e. duplicates) and their alignment positions are identified. (F) An undirected weighted graph is built for each CB+UMI combination with fragments as nodes and shared alignments as edge weights. For each component the most informative read according to alignment quality and ambiguity criteria is selected as representative. This method identifies and corrects non obvious duplicates (e.g. f1-f2, and f1-f3).
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/112230d4-bdb3-4a15-b202-7786e7f739ca)
-MODEL FITTING. Stellarscope fits a Bayesian mixture model to the deduplicated weight matrix using an expectation maximization algorithm for each cell (G), for all cells (H), and for each cell type (I) in pooling modes Individual, Pseudobulk, and Celltype, respectively.!
+
+**MODEL FITTING**. Stellarscope fits a **Bayesian mixture model to the deduplicated weight matrix** using an **expectation maximization algorithm** for each cell (G), for all cells (H), and for each cell type (I) in pooling modes Individual, Pseudobulk, and Celltype, respectively.!
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/e385fdde-4331-4f6e-b228-2593da57af65)
-REASSIGNMENT. Once the model is fitted and parameters are estimated, Stellarscope uses the posterior probability matrix to reassign ambiguous fragments to their final generating locus. Stellarscope provides a variety of reassignment strategies (J) including filtering based on a threshold, excluding fragments with multiple optimal alignments, and randomly selecting from multiple optimal alignments; these criteria result in a different number of excluded alignments (shaded in grey). The output from Stellarscope (K) includes an umi-tracking file with the graphs and representative reads selection; a log file with the fitted models, the number of observations and parameters estimated, and a log likelihood for the fitted model; an updated BAM file; and a sparse single-cell counts matrix compatible with all the generally used analysis tools.
+
+**REASSIGNMENT**. Once the model is fitted and parameters are estimated, Stellarscope uses the **posterior probability matrix** to reassign ambiguous fragments to their final generating locus. Stellarscope provides a variety of reassignment strategies (J) including filtering based on a threshold, excluding fragments with multiple optimal alignments, and randomly selecting from multiple optimal alignments; these criteria result in a different number of excluded alignments (shaded in grey). The output from Stellarscope (K) includes an **umi-tracking file** with the graphs and representative reads selection; **a log file** with the fitted models, the number of observations and parameters estimated, and a log likelihood for the fitted model; an **updated BAM file**; and **a sparse single-cell counts matrix** compatible with all the generally used analysis tools.
 ![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/05db4ccd-b0d2-47e2-8255-cff19705cd01)
 
 ## Brief Overview of Stellarscope
@@ -73,6 +77,16 @@ biological processes at the single-cell level.
 
 [Learn more about
 Stellarscope](https://www.biorxiv.org/content/10.1101/2023.12.28.573568v1.full)
+
+## file checkup
+### whitelist
+download form https://kb.10xgenomics.com/hc/en-us/articles/360031133451-Why-is-there-a-discrepancy-in-the-3M-february-2018-txt-barcode-whitelist
+
+`head resources/whitelist_10x/3M-february-2018.txt` 
+
+![image](https://github.com/Lemenyeux/TE_quantification/assets/87812974/2307530e-603e-4412-8a71-de8df3c35e56)
+
+
 
 # Requirements for this tutorial
 
