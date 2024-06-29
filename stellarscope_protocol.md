@@ -627,7 +627,8 @@ The basic usage of Stellarscope is `stellarscope assign [samfile] [gtffile]`. Wh
 
 ``` bash
 # you can use this command to explore the annotation
-head resources/retro.hg38.v1.gtf 
+head resources/retro.hg38.v1.gtf
+# 69442 transcriptional units with 27812 unique TE features
 ```
 
 The `stellarscope assign` command will do the following operations: filter alignments by the user-provided list of passing barcodes (`--whitelist`), create an initial weight matrix with fragments and candidate assigned features, perform our multimapper-aware UMI deduplication, fit a bayesian model to the deduplicated weight matrix using an EM, once the EM is complete, the posterior probability matrix is used to reassign each ambiguous fragment to their generating locus.
