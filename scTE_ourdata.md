@@ -143,30 +143,58 @@ sc.settings.verbosity = 0
 adata = anndata.read_h5ad('d19_4295.h5ad', backed='r')
 print(adata)
 # AnnData object with n_obs × n_vars = 10000 × 58389 backed at 'd19_4295.h5ad'
+print(len(adata.var_names))
+# 58389
+adata.var_names[:5]
+# Index(['(CATTC)n', '(GAATG)n', 'A1BG', 'A1BG-AS1', 'A1CF'], dtype='object')
+
 
 # Load TE names
 te_feature = pd.read_csv('/home/liumy/TEQTL/scRNA/scTE/other_data/rmsk.txt.gz', compression='gzip', header=None, sep='\t')
 # Extract the 11th column (note that pandas uses 0-based indexing, so the 11th column is at index 10)
-te_names = te_feature.iloc[:, 10].tolist()
-
-# Ensure that the genes_to_select are in the var_names of the AnnData object
-te_names = [gene for gene in te_names if gene in adata.var_names]
+te_names = te_feature.iloc[:, 10].tolist().set()
 print(len(te_names))
+# 5683690
+te_names_set = list(set(te_names))
+# 15600
 print(te_names[:5])
-# ['TAR1', 'L1MC5a', 'MER5B', 'MIR3', 'L2a']
+# ['(TAACCC)n', 'TAR1', 'L1MC5a', 'MER5B', 'MIR3']
+print(te_names_set[:5])
+# ['(CCCAGT)n', '(GAAGCTA)n', '(ATTGTG)n', '(GGAGCGC)n', '(TCTCCTT)n']
+
+
+# Ensure that the te_names are in the var_names of the AnnData object
+te_names_select = [gene for gene in te_names_set if gene in adata.var_names]
+print(len(te_names_select))
+# 1074
+print(te_names_select[:5])
+# ['LTR16', 'UCON55', 'CR1-13_AMi', 'MLT1F-int', 'CR1-3_Croc']
 
 # Subset the AnnData object to include only selected TE names
-adata_subset = adata[:, te_names]
+adata_subset = adata[:, te_names_select].copy
 adata_subset
-
-# View of AnnData object with n_obs × n_vars = 10000 × 4819290 backed at 'd19_4295.h5ad'
+# View of AnnData object with n_obs × n_vars = 10000 × 1074 backed at 'd19_4295.h5ad'
+adata_dense = adata_subset.X.toarray()
 
 # Save the subset AnnData object to an h5ad file
 adata_subset.write('/home/liumy/TEQTL/scRNA/scTE/results/d19_4295_te/d19_4295_te.h5ad')
 
 # Convert the expression matrix to a DataFrame and save to a CSV file
-expression_matrix_df = pd.DataFrame(adata_subset.X, index=adata_subset.obs_names, columns=adata_subset.var_names)
+expression_matrix_df = pd.DataFrame(adata_dense, index=adata_subset.obs_names, columns=adata_subset.var_names)
 expression_matrix_df.to_csv('/home/liumy/TEQTL/scRNA/scTE/results/d19_4295_te/d19_4295_te.csv')
+
+
+## other test
+print(f"Number of unique elements in te_names: {len(set(te_names))}")
+# Number of unique elements in te_names: 15600
+print(f"Number of unique elements in adata.var_names: {len(set(adata.var_names))}")
+# Number of unique elements in adata.var_names: 58389
+duplicates_in_te_names = len(te_names) != len(set(te_names))
+print(f"Are there duplicates in te_names? {duplicates_in_te_names}")
+# Are there duplicates in te_names? True
+duplicates_in_var_names = len(adata.var_names) != len(set(adata.var_names))
+print(f"Are there duplicates in adata.var_names? {duplicates_in_var_names}")
+# Are there duplicates in adata.var_names? False
 
 ```
 
