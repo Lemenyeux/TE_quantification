@@ -55,7 +55,7 @@ nohup STAR \
   --outFilterMultimapScoreRange 5 \
   --outFileNamePrefix results/star_alignment/ > ${log_file}/STAR_240628.log 2>&1 &
 
-# [31019 16:37-17:25]
+# [31019 16:37-17:25 Estimated Number of Cells,6447 without --soloCellFilter EmptyDrops_CR]
 
 nohup STAR \
   --runThreadN 15 \
@@ -73,7 +73,7 @@ nohup STAR \
   --outFilterMultimapScoreRange 5 \
   --outFileNamePrefix results/star_alignment/cellfilter > ${log_file}/STAR_testcellfilter_240630.log 2>&1 &
 
-# [40163]
+# [40163 Estimated Number of Cells,8396 ]
 
 # check the output
 tree -t results/star_alignment
