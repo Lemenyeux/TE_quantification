@@ -57,6 +57,24 @@ nohup STAR \
 
 # [31019 16:37-17:25]
 
+nohup STAR \
+  --runThreadN 15 \
+  --genomeDir ${resource_file}/STAR_GRCh38.d1.vd1_gencode.v38 \
+  --readFilesIn ${fastqfile}/D19-4295_S1_L001_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L002_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L003_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L004_R2_001.fastq.gz ${fastqfile}/D19-4295_S1_L001_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L002_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L003_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L004_R1_001.fastq.gz \
+  --readFilesCommand gunzip -c \
+  --soloCBwhitelist ${resource_file}/whitelist_10x/3M-february-2018.txt \
+  --soloType CB_UMI_Simple --soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen 10 \
+  --outSAMunmapped Within \
+  --outSAMattributes NH HI AS NM nM MD CR CY UR UY CB UB GX GN sS sQ sM \
+  --outSAMtype BAM SortedByCoordinate \
+  --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR \
+  --limitOutSJcollapsed 5000000 \
+  --outFilterMultimapNmax 500 \
+  --outFilterMultimapScoreRange 5 \
+  --outFileNamePrefix results/star_alignment/cellfilter > ${log_file}/STAR_testcellfilter_240630.log 2>&1 &
+
+# [40163]
+
 # check the output
 tree -t results/star_alignment
 ```
