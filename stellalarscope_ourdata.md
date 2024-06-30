@@ -57,27 +57,25 @@ nohup STAR \
 
 # [31019 16:37-17:25 Estimated Number of Cells,6447 without --soloCellFilter EmptyDrops_CR]
 
-nohup STAR \
-  --runThreadN 15 \
-  --genomeDir ${resource_file}/STAR_GRCh38.d1.vd1_gencode.v38 \
-  --readFilesIn ${fastqfile}/D19-4295_S1_L001_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L002_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L003_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L004_R2_001.fastq.gz ${fastqfile}/D19-4295_S1_L001_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L002_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L003_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L004_R1_001.fastq.gz \
-  --readFilesCommand gunzip -c \
-  --soloCBwhitelist ${resource_file}/whitelist_10x/3M-february-2018.txt \
-  --soloType CB_UMI_Simple --soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen 10 \
-  --outSAMunmapped Within \
-  --outSAMattributes NH HI AS NM nM MD CR CY UR UY CB UB GX GN sS sQ sM \
-  --outSAMtype BAM SortedByCoordinate \
-  --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR \
-  --limitOutSJcollapsed 5000000 \
-  --outFilterMultimapNmax 500 \
-  --outFilterMultimapScoreRange 5 \
-  --outFileNamePrefix results/star_alignment/cellfilter > ${log_file}/STAR_testcellfilter_240630.log 2>&1 &
-
-# [40163 Estimated Number of Cells,8396 ]
+# soloCellFiltering
+STAR --runMode soloCellFiltering  results/star_alignment/Solo.out/Gene/raw/   results/star_alignment/Solo.out/Gene/filtered_emptyDrop/   --soloCellFilter EmptyDrops_CR --soloUMIfiltering MultiGeneUMI --soloCBmatchWLtype 1MM_multi_pseudocounts
 
 # check the output
 tree -t results/star_alignment
 ```
+
+## check the codes
+> `--soloUMIfiltering MultiGeneUMI_CR`: basic + remove lower-count UMIs that map to more than one gene, matching CellRanger > 3.0.0. Only works with --soloUMIdedup 1MM_CR
+> `--soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts`: same as 1MM_multi_pseudocounts, multimatching to WL is allowed for CBs with N-bases. This option matches best with CellRanger >= 3.0.0
+> `--soloUMIdedup 1MM_CR`: CellRanger2-4 algorithm for 1MM UMI collapsing.
+> `--soloCellFilter EmptyDrops_CR`: EmptyDrops filtering in CellRanger flavor. Please cite the original EmptyDrops paper: A.T.L Lun et al, Genome Biology, 20, 63 (2019): https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1662-y.
+>> Can be followed by 10 numeric parameters:
+>> nExpectedCells   maxPercentile   maxMinRatio   indMin   indMax   umiMin   umiMinFracMedian   candMaxN   FDR   simN
+>> The harcoded values are from CellRanger:
+>> 3000             0.99            10            45000    90000    500      0.01                20000     0.01  10000
+> `clipAdapterType CellRanger4`: 5p and 3p adapter clipping similar to CellRanger4. Utilizes Opal package by Martin Šošić: https://github.com/Martinsos/opal
+
+
 
 # 3. Stellarscope Cellsort
 ``` bash
@@ -186,4 +184,25 @@ nohup stellarscope resume \
 
 # stellarscope pooling mode celltype results
 tree -t results/stellarscope/celltype
+```
+
+# 6 other tests
+``` bash
+nohup STAR \
+  --runThreadN 15 \
+  --genomeDir ${resource_file}/STAR_GRCh38.d1.vd1_gencode.v38 \
+  --readFilesIn ${fastqfile}/D19-4295_S1_L001_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L002_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L003_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L004_R2_001.fastq.gz ${fastqfile}/D19-4295_S1_L001_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L002_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L003_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L004_R1_001.fastq.gz \
+  --readFilesCommand gunzip -c \
+  --soloCBwhitelist ${resource_file}/whitelist_10x/3M-february-2018.txt \
+  --soloType CB_UMI_Simple --soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen 10 \
+  --outSAMunmapped Within \
+  --outSAMattributes NH HI AS NM nM MD CR CY UR UY CB UB GX GN sS sQ sM \
+  --outSAMtype BAM SortedByCoordinate \
+  --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR \
+  --limitOutSJcollapsed 5000000 \
+  --outFilterMultimapNmax 500 \
+  --outFilterMultimapScoreRange 5 \
+  --outFileNamePrefix results/star_alignment/cellfilter > ${log_file}/STAR_testcellfilter_240630.log 2>&1 &
+
+# [40163 Estimated Number of Cells,8396 ]
 ```
