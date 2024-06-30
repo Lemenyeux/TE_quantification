@@ -64,18 +64,6 @@ nohup STAR \
 
 # [31019 16:37-17:25 Estimated Number of Cells,6447 without --soloCellFilter EmptyDrops_CR]
 
-# soloCellFiltering
-STAR --runMode soloCellFiltering \
-    results/star_alignment/Solo.out/Gene/raw/ \
-    results/star_alignment/Solo.out/Gene/filtered_emptyDrop/ \
-    --soloCellFilter EmptyDrops_CR \
-    --soloUMIfiltering MultiGeneUMI_CR \
-    --soloUMIdedup 1MM_CR \
-    --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts 
-
-# [Estimated Number of Cells: 8396]
-# [Estimated Number of Cells: 8396 with --soloStrand Reverse]
-
 # check the output
 tree -t results/star_alignment
 ```
@@ -225,4 +213,17 @@ nohup STAR \
   --outFileNamePrefix results/star_alignment/cellfilter > ${log_file}/STAR_testcellfilter_240630.log 2>&1 &
 
 # [40163 Estimated Number of Cells,8396 ]
+
+
+# soloCellFiltering
+STAR --runMode soloCellFiltering \
+    results/star_alignment/Solo.out/Gene/raw/ \
+    results/star_alignment/Solo.out/Gene/filtered_emptyDrop/ \
+    --soloCellFilter EmptyDrops_CR \
+    --soloUMIfiltering MultiGeneUMI_CR \
+    --soloUMIdedup 1MM_CR \
+    --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts 
+
+# [Estimated Number of Cells: 8396]
+# [Estimated Number of Cells: 8396 with --soloStrand Reverse]
 ```
