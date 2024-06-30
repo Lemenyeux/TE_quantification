@@ -38,6 +38,13 @@ conda activate stellarscope
 # create directory for STAR results
 mkdir -p results/star_alignment
 
+# genomeGenerate: generate STAR genome index identical to CellRanger's
+STAR  --runMode genomeGenerate \
+    --runThreadN 15 \
+    --genomeDir /home/liumy/software/stellarscope/resources/CR_refdata-gex-GRCh38-2024-A/ \
+    --genomeFastaFiles /home/liumy/software/cellranger/refdata-gex-GRCh38-2024-A/fasta/genome.fa  \
+    --sjdbGTFfile /home/liumy/software/stellarscope/resources/genes.gtf
+
 # run STAR alignment
 nohup STAR \
   --runThreadN 15 \
@@ -58,7 +65,16 @@ nohup STAR \
 # [31019 16:37-17:25 Estimated Number of Cells,6447 without --soloCellFilter EmptyDrops_CR]
 
 # soloCellFiltering
-STAR --runMode soloCellFiltering  results/star_alignment/Solo.out/Gene/raw/   results/star_alignment/Solo.out/Gene/filtered_emptyDrop/   --soloCellFilter EmptyDrops_CR --soloUMIfiltering MultiGeneUMI --soloCBmatchWLtype 1MM_multi_pseudocounts
+STAR --runMode soloCellFiltering \
+    results/star_alignment/Solo.out/Gene/raw/ \
+    results/star_alignment/Solo.out/Gene/filtered_emptyDrop/ \
+    --soloCellFilter EmptyDrops_CR \
+    --soloUMIfiltering MultiGeneUMI_CR \
+    --soloUMIdedup 1MM_CR \
+    --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts 
+
+# [Estimated Number of Cells: 8396]
+# [Estimated Number of Cells: 8396 with --soloStrand Reverse]
 
 # check the output
 tree -t results/star_alignment
@@ -74,6 +90,10 @@ tree -t results/star_alignment
 >> The harcoded values are from CellRanger:
 >> 3000             0.99            10            45000    90000    500      0.01                20000     0.01  10000
 > `clipAdapterType CellRanger4`: 5p and 3p adapter clipping similar to CellRanger4. Utilizes Opal package by Martin Šošić: https://github.com/Martinsos/opal
+
+## How to make STARsolo raw gene counts (almost) identical to CellRanger's
+CellRanger uses its own "filtered" version of annotations (GTF file) which is a subset of ENSEMBL annotations, with several gene biotypes removed (mostly small non-coding RNA). Annotations affect the counts, and to match CellRanger counts CellRanger annotations have to be used. 10X provides several versions of the CellRanger annotations: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest. For the best match, the annotations in CellRanger run and STARsolo run should be exactly the same.
+
 
 
 
