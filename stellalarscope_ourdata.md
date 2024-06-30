@@ -49,7 +49,7 @@ nohup STAR \
   --outSAMunmapped Within \
   --outSAMattributes NH HI AS NM nM MD CR CY UR UY CB UB GX GN sS sQ sM \
   --outSAMtype BAM SortedByCoordinate \
-  --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR \
+  --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR \
   --limitOutSJcollapsed 5000000 \
   --outFilterMultimapNmax 500 \
   --outFilterMultimapScoreRange 5 \
