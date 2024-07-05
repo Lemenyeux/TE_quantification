@@ -79,7 +79,7 @@ nohup STAR \
   --limitOutSJcollapsed 5000000 \
   --outFilterMultimapNmax 500 \
   --outFilterMultimapScoreRange 5 \
-  --outFileNamePrefix results/star_alignment/ > ${log_file}/STAR_240628.log 2>&1 &
+  --outFileNamePrefix results/star_alignment/ > ${log_file}/STAR_cellranger240705.log 2>&1 &
 
 # [31019 16:37-17:25 Estimated Number of Cells,6447 without --soloCellFilter EmptyDrops_CR]
 
