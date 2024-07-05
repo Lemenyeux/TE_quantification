@@ -81,7 +81,7 @@ nohup STAR \
   --outFilterMultimapScoreRange 5 \
   --outFileNamePrefix results/star_alignment/ > ${log_file}/STAR_cellranger240705.log 2>&1 &
 
-# [111427 Estimated Number of Cells,6447]
+# [111427 Estimated Number of Cells,???]
 
 
 # check the output
