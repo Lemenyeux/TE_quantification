@@ -38,14 +38,7 @@ conda activate stellarscope
 # create directory for STAR results
 mkdir -p results/star_alignment
 
-# genomeGenerate: generate STAR genome index identical to CellRanger's
-STAR  --runMode genomeGenerate \
-    --runThreadN 15 \
-    --genomeDir /home/liumy/software/stellarscope/resources/CR_refdata-gex-GRCh38-2024-A/ \
-    --genomeFastaFiles /home/liumy/software/cellranger/refdata-gex-GRCh38-2024-A/fasta/genome.fa  \
-    --sjdbGTFfile /home/liumy/software/stellarscope/resources/genes.gtf
-
-# run STAR alignment
+# run STAR alignment - named results/star_alignment_star
 nohup STAR \
   --runThreadN 15 \
   --genomeDir ${resource_file}/STAR_GRCh38.d1.vd1_gencode.v38 \
@@ -63,6 +56,33 @@ nohup STAR \
   --outFileNamePrefix results/star_alignment/ > ${log_file}/STAR_240628.log 2>&1 &
 
 # [31019 16:37-17:25 Estimated Number of Cells,6447 without --soloCellFilter EmptyDrops_CR]
+
+# genomeGenerate: generate STAR genome index identical to CellRanger's
+STAR  --runMode genomeGenerate \
+    --runThreadN 15 \
+    --genomeDir /home/liumy/software/stellarscope/resources/CR_refdata-gex-GRCh38-2024-A/ \
+    --genomeFastaFiles /home/liumy/software/cellranger/refdata-gex-GRCh38-2024-A/fasta/genome.fa  \
+    --sjdbGTFfile /home/liumy/software/stellarscope/resources/genes.gtf
+
+# rerun STAR alignment using STAR genome index identical to CellRanger's
+nohup STAR \
+  --runThreadN 15 \
+  --genomeDir ${resource_file}/CR_refdata-gex-GRCh38-2024-A \
+  --readFilesIn ${fastqfile}/D19-4295_S1_L001_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L002_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L003_R2_001.fastq.gz,${fastqfile}/D19-4295_S1_L004_R2_001.fastq.gz ${fastqfile}/D19-4295_S1_L001_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L002_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L003_R1_001.fastq.gz,${fastqfile}/D19-4295_S1_L004_R1_001.fastq.gz \
+  --readFilesCommand gunzip -c \
+  --soloCBwhitelist ${resource_file}/whitelist_10x/3M-february-2018.txt \
+  --soloType CB_UMI_Simple --soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen 10 \
+  --outSAMunmapped Within \
+  --outSAMattributes NH HI AS NM nM MD CR CY UR UY CB UB GX GN sS sQ sM \
+  --outSAMtype BAM SortedByCoordinate \
+  --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR \
+  --limitOutSJcollapsed 5000000 \
+  --outFilterMultimapNmax 500 \
+  --outFilterMultimapScoreRange 5 \
+  --outFileNamePrefix results/star_alignment/ > ${log_file}/STAR_240628.log 2>&1 &
+
+# [31019 16:37-17:25 Estimated Number of Cells,6447 without --soloCellFilter EmptyDrops_CR]
+
 
 # check the output
 tree -t results/star_alignment
