@@ -56,6 +56,7 @@ nohup STAR \
   --outFileNamePrefix results/star_alignment/ > ${log_file}/STAR_240628.log 2>&1 &
 
 # [31019 16:37-17:25 Estimated Number of Cells,6447 without --soloCellFilter EmptyDrops_CR]
+# [Estimated Number of Cells,6447 without --soloCellFilter EmptyDrops_CR]
 
 # genomeGenerate: generate STAR genome index identical to CellRanger's
 STAR  --runMode genomeGenerate \
@@ -81,7 +82,7 @@ nohup STAR \
   --outFilterMultimapScoreRange 5 \
   --outFileNamePrefix results/star_alignment/ > ${log_file}/STAR_cellranger240705.log 2>&1 &
 
-# [111427 Estimated Number of Cells,???]
+# [111427 Estimated Number of Cells,8515]
 
 
 # check the output
@@ -101,6 +102,98 @@ tree -t results/star_alignment
 
 ## How to make STARsolo raw gene counts (almost) identical to CellRanger's
 CellRanger uses its own "filtered" version of annotations (GTF file) which is a subset of ENSEMBL annotations, with several gene biotypes removed (mostly small non-coding RNA). Annotations affect the counts, and to match CellRanger counts CellRanger annotations have to be used. 10X provides several versions of the CellRanger annotations: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest. For the best match, the annotations in CellRanger run and STARsolo run should be exactly the same.
+
+## check the results------------------
+> **STAR using the index identical to Cellranger's**
+> **/home/liumy/TEQTL/scRNA/stellarscope/results/star_alignment/Log.final.out  STAR using the index identical to Cellranger's**
+``` markdown
+
+
+                                 Started job on |       Jul 05 10:51:47
+                             Started mapping on |       Jul 05 10:56:47
+                                    Finished on |       Jul 05 12:02:29
+       Mapping speed, Million of reads per hour |       176.11
+
+                          Number of input reads |       192840779
+                      Average input read length |       48
+                                    UNIQUE READS:
+                   Uniquely mapped reads number |       122935083
+                        Uniquely mapped reads % |       63.75%
+                          Average mapped length |       54.59
+                       Number of splices: Total |       1221691
+            Number of splices: Annotated (sjdb) |       1072500
+                       Number of splices: GT/AG |       1117112
+                       Number of splices: GC/AG |       20942
+                       Number of splices: AT/AC |       1675
+               Number of splices: Non-canonical |       81962
+                      Mismatch rate per base, % |       0.38%
+                         Deletion rate per base |       0.01%
+                        Deletion average length |       1.30
+                        Insertion rate per base |       0.01%
+                       Insertion average length |       1.19
+                             MULTI-MAPPING READS:
+        Number of reads mapped to multiple loci |       22671591
+             % of reads mapped to multiple loci |       11.76%
+        Number of reads mapped to too many loci |       8
+             % of reads mapped to too many loci |       0.00%
+                                  UNMAPPED READS:
+  Number of reads unmapped: too many mismatches |       0
+       % of reads unmapped: too many mismatches |       0.00%
+            Number of reads unmapped: too short |       40318965
+                 % of reads unmapped: too short |       20.91%
+                Number of reads unmapped: other |       6915132
+                     % of reads unmapped: other |       3.59%
+                                  CHIMERIC READS:
+                       Number of chimeric reads |       0
+                            % of chimeric reads |       0.00%
+```
+> **/home/liumy/TEQTL/scRNA/stellarscope/results/star_alignment/Solo.out/Gene/Summary.csv STAR using the index identical to Cellranger's**
+``` marndown
+Number of Reads,192840779
+Reads With Valid Barcodes,0.981961
+Sequencing Saturation,0.144525
+Q30 Bases in CB+UMI,0.963877
+Q30 Bases in RNA read,0.911485
+Reads Mapped to Genome: Unique+Multiple,0.755062
+Reads Mapped to Genome: Unique,0.637495
+Reads Mapped to Gene: Unique+Multiple Gene,NoMulti
+Reads Mapped to Gene: Unique Gene,0.193852
+Estimated Number of Cells,8515
+Unique Reads in Cells Mapped to Gene,26308021
+Fraction of Unique Reads in Cells,0.703752
+Mean Reads per Cell,3089
+Median Reads per Cell,2379
+UMIs in Cells,22289943
+Mean UMI per Cell,2617
+Median UMI per Cell,2025
+Mean Gene per Cell,1568
+Median Gene per Cell,1337
+Total Gene Detected,29575
+```
+> **/home/liumy/TEQTL/scRNA/stellarscope/results/star_alignment/Solo.out/Gene/Summary.csv STAR using STAR genome index withou -soloCellFilter EmptyDrops_CR**
+``` markdown
+Number of Reads,192840779
+Reads With Valid Barcodes,0.981986
+Sequencing Saturation,0.141748
+Q30 Bases in CB+UMI,0.963877
+Q30 Bases in RNA read,0.911485
+Reads Mapped to Genome: Unique+Multiple,0.755183
+Reads Mapped to Genome: Unique,0.637804
+Reads Mapped to Gene: Unique+Multiple Gene,NoMulti
+Reads Mapped to Gene: Unique Gene,0.179157
+Estimated Number of Cells,6447
+Unique Reads in Cells Mapped to Gene,22846101
+Fraction of Unique Reads in Cells,0.661271
+Mean Reads per Cell,3543
+Median Reads per Cell,2896
+UMIs in Cells,19389259
+Mean UMI per Cell,3007
+Median UMI per Cell,2472
+Mean Gene per Cell,1820
+Median Gene per Cell,1624
+Total Gene Detected,35381
+```
+
 
 
 
